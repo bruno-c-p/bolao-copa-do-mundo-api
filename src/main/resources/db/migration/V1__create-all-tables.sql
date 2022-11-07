@@ -1,15 +1,17 @@
 create table tb_role (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     authority varchar(30) not null
 );
 
 create table tb_user (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     nickname varchar(30) not null,
     points int default 0,
     email varchar(100) not null,
     password varchar(255) not null,
-    is_first_login boolean default true
+    is_first_login boolean default true,
+    status varchar(30) default 'PENDING',
+    activation_code varchar(6)
 );
 
 create table tb_user_role (
@@ -21,7 +23,7 @@ create table tb_user_role (
 );
 
 create table tb_log (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     user_id bigint not null,
     date timestamp not null,
     action varchar(30) not null,
@@ -29,12 +31,12 @@ create table tb_log (
 );
 
 create table tb_group (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     name char not null
 );
 
 create table tb_team (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     name varchar(30) not null,
     acronym varchar(3) not null,
     group_id bigint not null,
@@ -44,7 +46,7 @@ create table tb_team (
 );
 
 create table tb_match (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     date timestamp not null,
     result varchar(20),
     team_1 bigint not null,
@@ -54,7 +56,7 @@ create table tb_match (
 );
 
 create table tb_tip (
-    id bigint primary key not null,
+    id bigint primary key not null generated always as identity,
     user_id bigint not null,
     match_id bigint not null,
     result varchar(20) not null,
