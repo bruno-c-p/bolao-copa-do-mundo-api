@@ -12,8 +12,8 @@ public class RoleDTO implements Serializable {
 
     private Long id;
 
-    @Size(min = 6, max = 30, message = "Field size should be between 6 and 30 characters")
-    @NotBlank(message = "Campo obrigatório")
+    @Size(min = 6, max = 30, message = "Authority must be between 6 and 30 characters")
+    @NotBlank(message = "Required field")
     private String authority;
 
     public RoleDTO() {

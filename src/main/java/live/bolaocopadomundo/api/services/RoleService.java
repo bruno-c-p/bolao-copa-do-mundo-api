@@ -30,7 +30,7 @@ public class RoleService {
     @Transactional(readOnly = true)
     public RoleDTO findById(Long id) {
         Optional<Role> object = roleRepository.findById(id);
-        Role entity = object.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        Role entity = object.orElseThrow(() -> new ResourceNotFoundException("Role not found"));
         return new RoleDTO(entity);
     }
 
