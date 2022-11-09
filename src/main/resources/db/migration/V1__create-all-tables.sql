@@ -6,11 +6,11 @@ create table tb_role (
 create table tb_user (
     id bigint primary key not null generated always as identity,
     nickname varchar(30) not null,
-    points int default 0,
+    points int,
     email varchar(100) not null,
     password varchar(255) not null,
-    is_first_login boolean default true,
-    status varchar(30) default 'PENDING',
+    is_first_login boolean,
+    status varchar(30),
     activation_code varchar(6)
 );
 
@@ -40,9 +40,7 @@ create table tb_team (
     name varchar(30) not null,
     acronym varchar(3) not null,
     group_id bigint not null,
-    points int default 0,
-    flag_url varchar(255) not null,
-    fifa_ranking_position int
+    flag_url varchar(255) not null
 );
 
 create table tb_match (
@@ -61,5 +59,14 @@ create table tb_tip (
     match_id bigint not null,
     result varchar(20) not null,
     foreign key (user_id) references tb_user(id),
+    foreign key (match_id) references tb_match(id)
+);
+
+create table tb_team_match (
+    type varchar(5) not null,
+    team_id bigint not null,
+    match_id bigint not null,
+    primary key (team_id, match_id),
+    foreign key (team_id) references tb_team(id),
     foreign key (match_id) references tb_match(id)
 );
