@@ -7,7 +7,7 @@ import java.util.Optional;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import live.bolaocopadomundo.api.dto.UserInsertDTO;
+import live.bolaocopadomundo.api.dto.user.UserInsertDTO;
 import live.bolaocopadomundo.api.entities.User;
 import live.bolaocopadomundo.api.repositories.UserRepository;
 import live.bolaocopadomundo.api.resources.exceptions.FieldMessage;

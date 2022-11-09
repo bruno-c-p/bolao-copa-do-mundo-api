@@ -1,5 +1,6 @@
-package live.bolaocopadomundo.api.dto;
+package live.bolaocopadomundo.api.dto.user;
 
+import live.bolaocopadomundo.api.dto.RoleDTO;
 import live.bolaocopadomundo.api.entities.User;
 
 import javax.validation.constraints.Email;
@@ -22,15 +23,16 @@ public class UserDTO implements Serializable {
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
-    Set<RoleDTO> roles = new HashSet<>();
+    Set<String> roles = new HashSet<>();
 
     public UserDTO() {
     }
 
-    public UserDTO(User entity) {
-        id = entity.getId();
-        nickname = entity.getNickname();
-        email = entity.getEmail();
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
+        user.getRoles().forEach(role -> this.roles.add(role.getAuthority()));
     }
 
     public Long getId() {
@@ -57,7 +59,7 @@ public class UserDTO implements Serializable {
         this.email = email;
     }
 
-    public Set<RoleDTO> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 }

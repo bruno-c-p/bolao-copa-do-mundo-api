@@ -1,4 +1,4 @@
-package live.bolaocopadomundo.api.dto;
+package live.bolaocopadomundo.api.dto.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

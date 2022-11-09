@@ -1,4 +1,4 @@
-package live.bolaocopadomundo.api.dto;
+package live.bolaocopadomundo.api.dto.user;
 
 public class UserPasswordDTO extends UserTokenDTO {
 
