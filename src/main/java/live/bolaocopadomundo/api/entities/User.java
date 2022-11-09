@@ -42,6 +42,9 @@ public class User implements UserDetails, Serializable {
     private Set<Role> roles = new HashSet<>();
 
     public User() {
+        this.points = 0;
+        this.isFirstLogin = true;
+        this.status = Status.PENDING;
     }
 
     public Long getId() {
