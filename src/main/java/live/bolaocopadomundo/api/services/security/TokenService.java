@@ -19,6 +19,19 @@ public class TokenService {
     @Value("${bolao.jwt.secret}")
     private String secret;
 
+    public String generateEmailToken(User user) {
+        Date today = new Date();
+        Date expirationDate = new Date(today.getTime() + Long.parseLong(expiration));
+
+        return Jwts.builder()
+                .setIssuer("Bolão Copa do Mundo")
+                .setSubject(user.getEmail())
+                .setIssuedAt(today)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
     public String generateToken(Authentication authentication) {
         User logged = (User) authentication.getPrincipal();
 
@@ -43,5 +56,10 @@ public class TokenService {
     public Long getUserId(String token) {
         Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
         return Long.parseLong(claims.getSubject());
+    }
+
+    public String getUserEmail(String token) {
+        Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+        return claims.getSubject();
     }
 }

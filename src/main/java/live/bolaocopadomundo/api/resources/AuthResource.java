@@ -1,8 +1,10 @@
 package live.bolaocopadomundo.api.resources;
 
 import live.bolaocopadomundo.api.dto.TokenDTO;
+import live.bolaocopadomundo.api.dto.UserEmailCodeDTO;
+import live.bolaocopadomundo.api.dto.UserEmailDTO;
 import live.bolaocopadomundo.api.dto.UserLoginDTO;
-import live.bolaocopadomundo.api.services.exceptions.UnauthorizedException;
+import live.bolaocopadomundo.api.services.security.AuthService;
 import live.bolaocopadomundo.api.services.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -12,11 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -26,6 +24,9 @@ public class AuthResource {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private TokenService tokenService;
@@ -41,5 +42,27 @@ public class AuthResource {
         } catch (AuthenticationException e) {
             return new ResponseEntity<Object>("Email ou senha inválidos", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping(value = "email-password-reset")
+    public ResponseEntity<?> emailPasswordReset(@RequestBody @Valid UserEmailDTO dto) {
+        authService.sendPasswordReset(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/activation-code")
+    public ResponseEntity<?> activationCode(@RequestBody @Valid UserEmailCodeDTO dto) {
+        boolean notValid = !(authService.isEmailValidated(dto));
+
+        if (notValid) {
+            return new ResponseEntity<Object>("Código de ativação inválido", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/resend-activation-code")
+    public ResponseEntity<?> resendActivationCode(@RequestBody @Valid UserEmailCodeDTO dto) {
+        authService.resendActivationCode(dto);
+        return ResponseEntity.ok().build();
     }
 }
