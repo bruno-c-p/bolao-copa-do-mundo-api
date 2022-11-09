@@ -2,7 +2,7 @@ package live.bolaocopadomundo.api.services;
 
 import live.bolaocopadomundo.api.dto.UserDTO;
 import live.bolaocopadomundo.api.dto.UserInsertDTO;
-import live.bolaocopadomundo.api.dto.UserUpdateDTO;
+import live.bolaocopadomundo.api.dto.UserPasswordDTO;
 import live.bolaocopadomundo.api.entities.Role;
 import live.bolaocopadomundo.api.entities.User;
 import live.bolaocopadomundo.api.repositories.RoleRepository;
@@ -10,6 +10,7 @@ import live.bolaocopadomundo.api.repositories.UserRepository;
 import live.bolaocopadomundo.api.services.email.EmailService;
 import live.bolaocopadomundo.api.services.exceptions.DatabaseException;
 import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
+import live.bolaocopadomundo.api.services.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,6 +42,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @Transactional(readOnly = true)
     public Page<UserDTO> findAllPaged(Pageable pageable) {
         Page<User> list = userRepository.findAll(pageable);
@@ -55,30 +59,29 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDTO create(UserInsertDTO dto) {
+    public String create(UserInsertDTO dto) {
         User entity = new User();
-
-        copyDtoToEntity(dto, entity);
+        entity.setNickname(dto.getNickname());
+        entity.setEmail(dto.getEmail());
         entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         entity.getRoles().add(roleRepository.getOne(1L));
         entity.setActivationCode(getRandomActivationCode());
-
         entity = userRepository.save(entity);
 
         emailService.sendConfirmationEmail(entity);
-
-        return new UserDTO(entity);
+        return tokenService.generateEmailToken(entity);
     }
 
     @Transactional
-    public UserDTO update(Long id, UserUpdateDTO dto) {
+    public UserDTO changePassword(UserPasswordDTO dto) {
         try {
-            User entity = userRepository.getOne(id);
-            copyDtoToEntity(dto, entity);
+            String userEmail = tokenService.getUserEmail(dto.getToken());
+            User entity = userRepository.findByEmail(userEmail).get();
+            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
             entity = userRepository.save(entity);
             return new UserDTO(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException("User not found ");
         }
     }
 
@@ -92,17 +95,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private void copyDtoToEntity(UserDTO dto, User entity) {
-        entity.setNickname(dto.getNickname());
-        entity.setEmail(dto.getEmail());
-        entity.getRoles().clear();
-
-        dto.getRoles().forEach(roleDto -> {
-            Role role = roleRepository.getOne(roleDto.getId());
-            entity.getRoles().add(role);
-        });
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -110,7 +102,6 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             return user.get();
         }
-
         throw new UsernameNotFoundException("Email not found");
     }
 
@@ -118,5 +109,13 @@ public class UserService implements UserDetailsService {
         Random randomizer = new Random();
         int number = randomizer.nextInt(999999);
         return String.format("%06d", number);
+    }
+
+    public Boolean existsByNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

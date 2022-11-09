@@ -31,7 +31,7 @@ public class RoleResource {
     }
 
     @PostMapping
-    public ResponseEntity<RoleDTO> insert(@Valid @RequestBody RoleDTO dto) {
+    public ResponseEntity<RoleDTO> insert(@RequestBody @Valid RoleDTO dto) {
         dto = roleService.insert(dto);
 
         URI uri = ServletUriComponentsBuilder
@@ -44,7 +44,7 @@ public class RoleResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<RoleDTO> update(@PathVariable Long id, @Valid @RequestBody RoleDTO dto) {
+    public ResponseEntity<RoleDTO> update(@PathVariable Long id, @RequestBody @Valid RoleDTO dto) {
         dto = roleService.update(id, dto);
         return ResponseEntity.ok().body(dto);
     }
