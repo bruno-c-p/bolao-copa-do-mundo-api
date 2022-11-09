@@ -33,11 +33,11 @@ public class TokenService {
     }
 
     public String generateToken(Authentication authentication) {
-        User logged = (User) authentication.getPrincipal();
+        String email = (String) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setIssuer("API do Bolão Copa do Mundo Wise")
-                .setSubject(logged.getId().toString())
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + Long.parseLong(expiration)))
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -51,11 +51,6 @@ public class TokenService {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public Long getUserId(String token) {
-        Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
-        return Long.parseLong(claims.getSubject());
     }
 
     public String getUserEmail(String token) {

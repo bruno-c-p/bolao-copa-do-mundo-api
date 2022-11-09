@@ -1,7 +1,7 @@
 package live.bolaocopadomundo.api.services.security;
 
-import live.bolaocopadomundo.api.dto.UserEmailCodeDTO;
-import live.bolaocopadomundo.api.dto.UserEmailDTO;
+import live.bolaocopadomundo.api.dto.user.UserEmailCodeDTO;
+import live.bolaocopadomundo.api.dto.user.UserEmailDTO;
 import live.bolaocopadomundo.api.entities.User;
 import live.bolaocopadomundo.api.entities.enums.Status;
 import live.bolaocopadomundo.api.repositories.UserRepository;

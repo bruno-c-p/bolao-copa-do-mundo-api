@@ -1,11 +1,9 @@
 package live.bolaocopadomundo.api.resources;
 
-import live.bolaocopadomundo.api.dto.UserDTO;
-import live.bolaocopadomundo.api.dto.UserEmailCodeDTO;
-import live.bolaocopadomundo.api.dto.UserInsertDTO;
-import live.bolaocopadomundo.api.dto.UserPasswordDTO;
+import live.bolaocopadomundo.api.dto.user.UserDTO;
+import live.bolaocopadomundo.api.dto.user.UserInsertDTO;
+import live.bolaocopadomundo.api.dto.user.UserPasswordDTO;
 import live.bolaocopadomundo.api.services.UserService;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

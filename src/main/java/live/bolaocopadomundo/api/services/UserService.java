@@ -1,9 +1,8 @@
 package live.bolaocopadomundo.api.services;
 
-import live.bolaocopadomundo.api.dto.UserDTO;
-import live.bolaocopadomundo.api.dto.UserInsertDTO;
-import live.bolaocopadomundo.api.dto.UserPasswordDTO;
-import live.bolaocopadomundo.api.entities.Role;
+import live.bolaocopadomundo.api.dto.user.UserDTO;
+import live.bolaocopadomundo.api.dto.user.UserInsertDTO;
+import live.bolaocopadomundo.api.dto.user.UserPasswordDTO;
 import live.bolaocopadomundo.api.entities.User;
 import live.bolaocopadomundo.api.repositories.RoleRepository;
 import live.bolaocopadomundo.api.repositories.UserRepository;
@@ -56,6 +55,18 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findById(id);
         User entity = user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return new UserDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Transactional
@@ -117,5 +128,9 @@ public class UserService implements UserDetailsService {
 
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public boolean passwordsMatch(String password, String userPassword) {
+        return passwordEncoder.matches(password, userPassword);
     }
 }
