@@ -43,8 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/users/password-reset").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/password-reset-confirm").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
