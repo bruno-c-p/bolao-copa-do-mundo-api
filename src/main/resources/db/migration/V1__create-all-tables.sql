@@ -25,7 +25,7 @@ create table tb_user_role (
 create table tb_log (
     id bigint primary key not null generated always as identity,
     user_id bigint not null,
-    date timestamp not null,
+    date timestamp without time zone not null,
     action varchar(30) not null,
     foreign key (user_id) references tb_user(id)
 );
@@ -45,12 +45,8 @@ create table tb_team (
 
 create table tb_match (
     id bigint primary key not null generated always as identity,
-    date timestamp not null,
-    result varchar(20),
-    team_1 bigint not null,
-    team_2 bigint not null,
-    foreign key (team_1) references tb_team(id),
-    foreign key (team_2) references tb_team(id)
+    date timestamp without time zone not null,
+    result varchar(20)
 );
 
 create table tb_tip (

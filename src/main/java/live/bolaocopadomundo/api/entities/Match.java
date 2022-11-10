@@ -2,10 +2,11 @@ package live.bolaocopadomundo.api.entities;
 
 
 import live.bolaocopadomundo.api.entities.enums.Result;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -16,7 +17,7 @@ public class Match implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "match")
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
     private Set<TeamMatch> teams = new LinkedHashSet<>();
 
     @OneToMany
@@ -25,13 +26,14 @@ public class Match implements Serializable {
     @Enumerated(EnumType.STRING)
     private Result result;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime date;
 
     public Match() {
+        this.result = Result.NOT_PLAYED;
     }
 
-    public Match(Long id, Result result, Instant date) {
+    public Match(Long id, Result result, LocalDateTime date) {
         this.id = id;
         this.result = result;
         this.date = date;
@@ -65,11 +67,11 @@ public class Match implements Serializable {
         this.result = result;
     }
 
-    public Instant getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

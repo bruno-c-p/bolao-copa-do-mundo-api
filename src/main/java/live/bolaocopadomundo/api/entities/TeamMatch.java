@@ -25,8 +25,7 @@ public class TeamMatch {
     public TeamMatch() {
     }
 
-    public TeamMatch(TeamMatchPK id, Team team, Match match, TeamMatchType type) {
-        this.id = id;
+    public TeamMatch(Team team, Match match, TeamMatchType type) {
         this.team = team;
         this.match = match;
         this.type = type;
