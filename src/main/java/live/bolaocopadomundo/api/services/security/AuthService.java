@@ -1,10 +1,13 @@
 package live.bolaocopadomundo.api.services.security;
 
+import live.bolaocopadomundo.api.dto.log.LogInputDTO;
 import live.bolaocopadomundo.api.dto.user.UserEmailCodeDTO;
 import live.bolaocopadomundo.api.dto.user.UserEmailDTO;
 import live.bolaocopadomundo.api.entities.User;
+import live.bolaocopadomundo.api.entities.enums.Action;
 import live.bolaocopadomundo.api.entities.enums.Status;
 import live.bolaocopadomundo.api.repositories.UserRepository;
+import live.bolaocopadomundo.api.services.LogService;
 import live.bolaocopadomundo.api.services.email.EmailService;
 import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

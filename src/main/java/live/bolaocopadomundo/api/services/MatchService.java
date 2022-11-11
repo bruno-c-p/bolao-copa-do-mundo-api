@@ -1,13 +1,18 @@
 package live.bolaocopadomundo.api.services;
 
+import com.querydsl.core.BooleanBuilder;
+import live.bolaocopadomundo.api.dto.match.MatchFinishDTO;
 import live.bolaocopadomundo.api.dto.match.MatchInputDTO;
 import live.bolaocopadomundo.api.dto.match.MatchOutputDTO;
 import live.bolaocopadomundo.api.entities.Group;
 import live.bolaocopadomundo.api.entities.Match;
+import live.bolaocopadomundo.api.entities.QMatch;
 import live.bolaocopadomundo.api.entities.TeamMatch;
+import live.bolaocopadomundo.api.entities.enums.Result;
 import live.bolaocopadomundo.api.repositories.GroupRepository;
 import live.bolaocopadomundo.api.repositories.MatchRepository;
 import live.bolaocopadomundo.api.repositories.TeamRepository;
+import live.bolaocopadomundo.api.repositories.TipRepository;
 import live.bolaocopadomundo.api.services.exceptions.DatabaseException;
 import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +24,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
@@ -33,10 +41,18 @@ public class MatchService {
     @Autowired
     private TeamRepository teamRepository;
 
+    @Autowired
+    private TipRepository tipRepository;
+
     @Transactional(readOnly = true)
-    public Page<MatchOutputDTO> findAllPaged(Pageable pageable) {
-        Page<Match> list = matchRepository.findAll(pageable);
-        return list.map(MatchOutputDTO::new);
+    public List<MatchOutputDTO> findAll(LocalDate date) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (date != null) {
+            builder.and(QMatch.match.date.between(date.atStartOfDay(), date.atTime(23, 59, 59)));
+        }
+
+        List<Match> list = (List<Match>) matchRepository.findAll(builder);
+        return list.stream().map(MatchOutputDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +76,32 @@ public class MatchService {
             Match entity = matchRepository.getOne(id);
             copyDtoToEntity(dto, entity);
             entity = matchRepository.save(entity);
+            return new MatchOutputDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        }
+    }
+
+    @Transactional
+    public MatchOutputDTO finishMatch(Long id, MatchFinishDTO dto) {
+        try {
+            Match entity = matchRepository.getOne(id);
+
+            if (!(entity.getDate().isBefore(LocalDateTime.now()))) {
+                throw new DatabaseException("Match hasn't happened yet");
+            }
+
+            if (entity.getResult() != Result.NOT_PLAYED) {
+                throw new DatabaseException("Match already finished");
+            }
+
+            entity.setResult(dto.getResult());
+            entity = matchRepository.save(entity);
+
+            tipRepository.findAllByMatchIdAndResultEquals(id, dto.getResult()).forEach(tip ->
+                    tip.getUser().setPoints(tip.getUser().getPoints() + 1)
+            );
+
             return new MatchOutputDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found " + id);

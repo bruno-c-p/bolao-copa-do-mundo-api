@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -29,9 +31,9 @@ public class TeamService {
     private GroupRepository groupRepository;
 
     @Transactional(readOnly = true)
-    public Page<TeamOutputDTO> findAllPaged(Pageable pageable) {
-        Page<Team> list = teamRepository.findAll(pageable);
-        return list.map(TeamOutputDTO::new);
+    public List<TeamOutputDTO> findAllPaged() {
+        List<Team> list = teamRepository.findAll();
+        return list.stream().map(TeamOutputDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
