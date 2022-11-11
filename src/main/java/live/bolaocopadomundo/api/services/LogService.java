@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LogService {
@@ -25,9 +27,9 @@ public class LogService {
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Page<LogOutputDTO> findAllPaged(Pageable pageable) {
-        Page<Log> list = logRepository.findAll(pageable);
-        return list.map(LogOutputDTO::new);
+    public List<LogOutputDTO> findAllPaged() {
+        List<Log> list = logRepository.findAll();
+        return list.stream().map(LogOutputDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +45,7 @@ public class LogService {
         entity.setUser(userRepository.getOne(dto.getUser()));
 
         try {
-            entity.setAction(Action.valueOf(dto.getAction()));
+            entity.setAction(dto.getAction());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid action");
         }
