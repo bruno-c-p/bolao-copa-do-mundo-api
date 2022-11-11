@@ -1,5 +1,7 @@
 package live.bolaocopadomundo.api.config.security;
 
+import live.bolaocopadomundo.api.repositories.UserRepository;
+import live.bolaocopadomundo.api.services.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +22,17 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Value("cors.site")
+    @Value("${cors.site}")
     private String corsUrl;
 
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
+
     @Autowired
-    private AuthenticationTokenFilter authenticationTokenFilter;
+    public WebSecurityConfig(TokenService tokenService, UserRepository userRepository) {
+        this.tokenService = tokenService;
+        this.userRepository = userRepository;
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -54,7 +62,7 @@ public class WebSecurityConfig {
                 .and().csrf().disable()
                 .cors().configurationSource(request -> corsConfiguration).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AuthenticationTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
