@@ -1,11 +1,16 @@
 package live.bolaocopadomundo.api.dto.match;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import live.bolaocopadomundo.api.dto.TeamMatchDTO;
 import live.bolaocopadomundo.api.entities.Match;
 import live.bolaocopadomundo.api.entities.enums.Result;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -18,8 +23,10 @@ public class MatchOutputDTO extends MatchDTO {
     private Set<TeamMatchDTO> teams = new LinkedHashSet<>();
     private Result result;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
     public MatchOutputDTO() {

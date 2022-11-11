@@ -1,34 +1,36 @@
 package live.bolaocopadomundo.api.dto.user;
 
-import live.bolaocopadomundo.api.dto.RoleDTO;
 import live.bolaocopadomundo.api.entities.User;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserDTO implements Serializable {
+public class UserOutputDTO implements Serializable {
 
     private Long id;
-
-    @NotBlank(message = "Required field")
-    @Size(max = 30, message = "Nickname must have less than 30 characters")
     private String nickname;
-
-    @Email(message = "Email is not valid", regexp = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])")
-    @NotBlank(message = "Required field")
     private String email;
+    private Integer points;
 
     private Set<String> roles = new HashSet<>();
 
-    public UserDTO() {
+    public UserOutputDTO() {
     }
 
-    public UserDTO(User user) {
+    public UserOutputDTO(Long id, String nickname, String email, Integer points, Set<String> roles) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.points = points;
+        this.roles = roles;
+    }
+
+    public UserOutputDTO(User user) {
         this.id = user.getId();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
+        this.points = user.getPoints();
         user.getRoles().forEach(role -> this.roles.add(role.getAuthority()));
     }
 
@@ -54,6 +56,14 @@ public class UserDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     public Set<String> getRoles() {

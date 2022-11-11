@@ -2,8 +2,11 @@ package live.bolaocopadomundo.api.dto.team;
 
 import live.bolaocopadomundo.api.entities.Team;
 
+import javax.validation.constraints.NotBlank;
+
 public class TeamInputDTO extends TeamDTO {
 
+    @NotBlank(message = "Required field")
     private String group;
 
     public TeamInputDTO() {

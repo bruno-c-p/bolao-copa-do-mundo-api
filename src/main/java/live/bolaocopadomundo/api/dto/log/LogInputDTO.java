@@ -1,23 +1,29 @@
 package live.bolaocopadomundo.api.dto.log;
 
 import live.bolaocopadomundo.api.entities.Log;
+import live.bolaocopadomundo.api.entities.enums.Action;
+
+import javax.validation.constraints.NotNull;
 
 public class LogInputDTO extends LogDTO {
 
+    @NotNull(message = "Required field")
     private Long user;
-    private String action;
+
+    @NotNull(message = "Required field")
+    private Action action;
 
     public LogInputDTO() {
     }
 
-    public LogInputDTO(Long user, String action) {
+    public LogInputDTO(Long user, Action action) {
         this.user = user;
         this.action = action;
     }
 
     public LogInputDTO(Log entity) {
         this.user = entity.getUser().getId();
-        this.action = String.valueOf(entity.getAction());
+        this.action = entity.getAction();
     }
 
     public Long getUser() {
@@ -28,11 +34,11 @@ public class LogInputDTO extends LogDTO {
         this.user = user;
     }
 
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(Action action) {
         this.action = action;
     }
 }

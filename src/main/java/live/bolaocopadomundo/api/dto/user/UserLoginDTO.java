@@ -2,11 +2,15 @@ package live.bolaocopadomundo.api.dto.user;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 public class UserLoginDTO implements Serializable {
 
+    @NotBlank(message = "Required field")
     private String email;
+
+    @NotBlank(message = "Required field")
     private String password;
 
     public String getEmail() {

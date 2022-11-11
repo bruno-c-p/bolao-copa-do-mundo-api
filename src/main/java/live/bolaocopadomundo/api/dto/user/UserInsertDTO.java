@@ -8,8 +8,6 @@ import javax.validation.constraints.Size;
 @UserInsertValid
 public class UserInsertDTO extends UserDTO {
 
-    private static final long serialVersionUID = 1L;
-
     @Size(min = 8, message = "Password must have at least 8 characters")
     @NotBlank(message = "Required field")
     private String password;
