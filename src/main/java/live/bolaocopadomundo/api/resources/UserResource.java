@@ -21,8 +21,8 @@ public class UserResource {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserOutputDTO>> findAll() {
-        List<UserOutputDTO> list = userService.findAll();
+    public ResponseEntity<List<UserOutputDTO>> findAll(@RequestParam(required = false) String nickname) {
+        List<UserOutputDTO> list = userService.findAll(nickname);
         return ResponseEntity.ok().body(list);
     }
 

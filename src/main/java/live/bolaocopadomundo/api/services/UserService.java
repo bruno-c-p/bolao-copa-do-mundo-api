@@ -59,8 +59,15 @@ public class UserService implements UserDetailsService {
     private LogService logService;
 
     @Transactional(readOnly = true)
-    public List<UserOutputDTO> findAll() {
-        List<User> list = userRepository.findAll();
+    public List<UserOutputDTO> findAll(String nickname) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (nickname != null && !nickname.isEmpty()) {
+            builder.and(QUser.user.nickname.containsIgnoreCase(nickname));
+        }
+
+        List<User> list = (List<User>) userRepository.findAll(builder);
+
         return list.stream().map(UserOutputDTO::new).collect(Collectors.toList());
     }
 
