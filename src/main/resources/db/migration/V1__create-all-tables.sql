@@ -46,7 +46,7 @@ create table tb_team (
 create table tb_match (
     id bigint primary key not null generated always as identity,
     date timestamp without time zone not null,
-    result varchar(20)
+    result varchar(20) not null default 'NOT_PLAYED'
 );
 
 create table tb_tip (
