@@ -44,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
+//                .antMatchers(HttpMethod.PATCH, "/users/**/admin").hasRole("ROLE_ADMIN")
 //                .antMatchers(HttpMethod.POST, "/logs").permitAll()
 //                .antMatchers(HttpMethod.POST, "/auth").permitAll()
 //                .antMatchers("/auth/**").permitAll()
@@ -64,16 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers("/actuator/**")
-                .antMatchers(
-                        "/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources/**",
-                        "/configuration/**",
-                        "/swagger-ui.html",
-                        "/webjars/**"
-                );
+        web.ignoring().antMatchers("/actuator/**");
     }
 
     @Override
