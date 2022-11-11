@@ -20,6 +20,7 @@ public class TeamMatch {
     @ManyToOne
     private Match match;
 
+    @Enumerated(EnumType.STRING)
     private TeamMatchType type;
 
     public TeamMatch() {

@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/teams")
 public class TeamResource {
@@ -18,8 +20,8 @@ public class TeamResource {
     private TeamService teamService;
 
     @GetMapping
-    public ResponseEntity<Page<TeamOutputDTO>> findAll(Pageable pageable) {
-        Page<TeamOutputDTO> list = teamService.findAllPaged(pageable);
+    public ResponseEntity<List<TeamOutputDTO>> findAll() {
+        List<TeamOutputDTO> list = teamService.findAllPaged();
         return ResponseEntity.ok().body(list);
     }
 

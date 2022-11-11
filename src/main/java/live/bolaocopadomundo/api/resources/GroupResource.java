@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/groups")
@@ -21,8 +22,8 @@ public class GroupResource {
     private GroupService groupService;
 
     @GetMapping
-    public ResponseEntity<Page<GroupOutputDTO>> findAll(Pageable pageable) {
-        Page<GroupOutputDTO> list = groupService.findAllPaged(pageable);
+    public ResponseEntity<List<GroupOutputDTO>> findAll() {
+        List<GroupOutputDTO> list = groupService.findAllPaged();
         return ResponseEntity.ok().body(list);
     }
 

@@ -1,18 +1,17 @@
 package live.bolaocopadomundo.api.resources;
 
-import live.bolaocopadomundo.api.dto.user.UserDTO;
 import live.bolaocopadomundo.api.dto.user.UserInsertDTO;
+import live.bolaocopadomundo.api.dto.user.UserOutputDTO;
 import live.bolaocopadomundo.api.dto.user.UserPasswordDTO;
 import live.bolaocopadomundo.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -22,14 +21,20 @@ public class UserResource {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
-        Page<UserDTO> list = userService.findAllPaged(pageable);
+    public ResponseEntity<List<UserOutputDTO>> findAll() {
+        List<UserOutputDTO> list = userService.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<UserOutputDTO>> ranking(@RequestParam(required = false) Integer limit) {
+        List<UserOutputDTO> list = userService.ranking(limit);
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
-        UserDTO dto = userService.findById(id);
+    public ResponseEntity<UserOutputDTO> findById(@PathVariable Long id) {
+        UserOutputDTO dto = userService.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
@@ -43,6 +48,12 @@ public class UserResource {
     public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
         Boolean exists = userService.existsByEmail(email);
         return ResponseEntity.ok().body(exists);
+    }
+
+    @PatchMapping(value = "/{id}/admin")
+    public ResponseEntity<UserOutputDTO> makeAdmin(@PathVariable Long id) {
+        UserOutputDTO dto = userService.makeAdmin(id);
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping
