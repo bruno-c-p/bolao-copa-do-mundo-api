@@ -1,76 +1,46 @@
 package live.bolaocopadomundo.api.config.security;
 
-import live.bolaocopadomundo.api.repositories.UserRepository;
-import live.bolaocopadomundo.api.services.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private AuthenticationTokenFilter authenticationTokenFilter;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http
-                .cors().and()
-                .authorizeRequests()
-                .antMatchers("/**").permitAll()
-//                .antMatchers(HttpMethod.PATCH, "/users/**/admin").hasRole("ROLE_ADMIN")
-//                .antMatchers(HttpMethod.POST, "/logs").permitAll()
-//                .antMatchers(HttpMethod.POST, "/auth").permitAll()
-//                .antMatchers("/auth/**").permitAll()
-//                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/users/exists/**").permitAll()
-//                .antMatchers(HttpMethod.PATCH, "/users/password-reset").permitAll()
-//                .antMatchers(HttpMethod.POST, "/users/password-reset-confirm").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterBefore(
-                        new AuthenticationTokenFilter(tokenService, userRepository),
-                        UsernamePasswordAuthenticationFilter.class
-                );
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/actuator/**");
-    }
-
-    @Override
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/logs").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/users/**/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/matches/**/finish").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/exists/**").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/users/password-reset").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/password-reset-confirm").permitAll()
+                .anyRequest().authenticated()
+                .and().csrf().disable()
+                .cors().and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/actuator/**");
     }
 }
