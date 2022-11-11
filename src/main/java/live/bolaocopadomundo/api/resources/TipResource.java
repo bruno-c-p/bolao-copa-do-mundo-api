@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class TipResource {
     }
 
     @PostMapping
-    public ResponseEntity<TipOutputDTO> insert(@RequestBody TipInputDTO dto) {
+    public ResponseEntity<TipOutputDTO> insert(@RequestBody @Valid TipInputDTO dto) {
         TipOutputDTO newDto = tipService.insert(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newDto);
     }

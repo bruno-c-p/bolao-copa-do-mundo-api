@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TipService {
@@ -35,9 +37,9 @@ public class TipService {
     private MatchRepository matchRepository;
 
     @Transactional(readOnly = true)
-    public Page<TipOutputDTO> findAllPaged(Pageable pageable) {
-        Page<Tip> list = tipRepository.findAll(pageable);
-        return list.map(TipOutputDTO::new);
+    public List<TipOutputDTO> findAllPaged() {
+        List<Tip> list = tipRepository.findAll();
+        return list.stream().map(TipOutputDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
