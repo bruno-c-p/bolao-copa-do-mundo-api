@@ -35,7 +35,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Senha inválida!");
         }
 
-        return new UsernamePasswordAuthenticationToken(email, null, user.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(email, password, user.getAuthorities());
     }
 
     @Override
