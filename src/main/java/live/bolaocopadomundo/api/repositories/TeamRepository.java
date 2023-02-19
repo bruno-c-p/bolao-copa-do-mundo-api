@@ -1,7 +1,6 @@
 package live.bolaocopadomundo.api.repositories;
 
 import live.bolaocopadomundo.api.entities.Team;
-import live.bolaocopadomundo.api.entities.TeamMatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
