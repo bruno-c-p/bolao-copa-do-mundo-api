@@ -1,19 +1,14 @@
 package live.bolaocopadomundo.api.services;
 
-import live.bolaocopadomundo.api.dto.group.GroupDTO;
 import live.bolaocopadomundo.api.dto.group.GroupInputDTO;
 import live.bolaocopadomundo.api.dto.group.GroupOutputDTO;
 import live.bolaocopadomundo.api.entities.Group;
-import live.bolaocopadomundo.api.entities.Team;
 import live.bolaocopadomundo.api.repositories.GroupRepository;
-import live.bolaocopadomundo.api.repositories.TeamRepository;
 import live.bolaocopadomundo.api.services.exceptions.DatabaseException;
 import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

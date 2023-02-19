@@ -3,18 +3,12 @@ package live.bolaocopadomundo.api.services;
 import com.querydsl.core.BooleanBuilder;
 import live.bolaocopadomundo.api.dto.log.LogInputDTO;
 import live.bolaocopadomundo.api.dto.log.LogOutputDTO;
-import live.bolaocopadomundo.api.dto.match.MatchOutputDTO;
 import live.bolaocopadomundo.api.entities.Log;
-import live.bolaocopadomundo.api.entities.Match;
 import live.bolaocopadomundo.api.entities.QLog;
-import live.bolaocopadomundo.api.entities.QMatch;
-import live.bolaocopadomundo.api.entities.enums.Action;
 import live.bolaocopadomundo.api.repositories.LogRepository;
 import live.bolaocopadomundo.api.repositories.UserRepository;
 import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -9,7 +9,6 @@ import live.bolaocopadomundo.api.entities.Match;
 import live.bolaocopadomundo.api.entities.QMatch;
 import live.bolaocopadomundo.api.entities.TeamMatch;
 import live.bolaocopadomundo.api.entities.enums.Result;
-import live.bolaocopadomundo.api.repositories.GroupRepository;
 import live.bolaocopadomundo.api.repositories.MatchRepository;
 import live.bolaocopadomundo.api.repositories.TeamRepository;
 import live.bolaocopadomundo.api.repositories.TipRepository;
@@ -18,8 +17,6 @@ import live.bolaocopadomundo.api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
