@@ -10,14 +10,9 @@
     <b>Final project for a trainee program by <i><a href="https://www.wises.com.br/">Wise</a></i>. One month to complete the project and meet the requirements.</b>
 </p>
 
-<h2 id="technologies">💻 Technologies</h2>
+<h2 id="technologies">Tech Stack</h2>
 
-- Spring
-- Java
-- PostgreSQL
-- JWT
-- QueryDSL
-- Flyway
+[![My Skills](https://skillicons.dev/icons?i=spring,java,postgres)](https://skillicons.dev)
 
 <h2 id="started">🚀 Getting started</h2>
 
